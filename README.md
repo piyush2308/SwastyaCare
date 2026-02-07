@@ -110,7 +110,7 @@ This project is being developed incrementally with continuous GitHub commits as 
 
 ## 👨‍💻 Author
 
-**Your Name**  
-Final Year B.Tech – Computer Science / IT  
+**Piyush Gupta**  
+Final Year B.Tech – Computer Science 
 
 
