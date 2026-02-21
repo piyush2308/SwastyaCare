@@ -1,24 +1,20 @@
 package com.nitkkr.swastyacare
 
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import com.nitkkr.swastyacare.ui.screens.HomeScreen
+import com.nitkkr.swastyacare.navigation.AppNavGraph
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MaterialTheme {
                 Surface {
-                    HomeScreen(
-                        onAddPatientClick = {},
-                        onViewPatientsClick = {},
-                        onHealthScanClick = {}
-                    )
+                    AppNavGraph()
                 }
             }
         }
