@@ -1,16 +1,14 @@
 package com.nitkkr.swastyacare.navigation
 
-
-
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.navigation.compose.*
-import com.nitkkr.swastyacare.ui.screens.HomeScreen
-import com.nitkkr.swastyacare.ui.screens.AddPatientScreen
+import com.nitkkr.swastyacare.ui.screens.*
 
 @Composable
 fun AppNavGraph() {
 
     val navController = rememberNavController()
+    val patientList = remember { mutableStateListOf<Patient>() }
 
     NavHost(
         navController = navController,
@@ -19,15 +17,52 @@ fun AppNavGraph() {
 
         composable("home") {
             HomeScreen(
-                onAddPatientClick = { navController.navigate("add_patient") },
-                onViewPatientsClick = { },
-                onHealthScanClick = { }
+                onAddPatientClick = { navController.navigate("addPatient") },
+                onViewPatientsClick = { navController.navigate("viewPatients") },
+                onHealthScanClick = {}
             )
         }
 
-        composable("add_patient") {
+        composable("addPatient") {
             AddPatientScreen(
-                onBackClick = { navController.popBackStack() }
+                onSavePatient = { patient ->
+                    patientList.add(patient)
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        composable("viewPatients") {
+            ViewPatientsScreen(
+                patients = patientList,
+                onDeletePatient = { patient ->
+                    patientList.remove(patient)
+                },
+                onEditPatient = { patient ->
+                    navController.navigate(
+                        "edit/${patient.name}/${patient.age}/${patient.phone}"
+                    )
+                }
+            )
+        }
+
+        composable(
+            route = "edit/{name}/{age}/{phone}"
+        ) { backStackEntry ->
+
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val age = backStackEntry.arguments?.getString("age") ?: ""
+            val phone = backStackEntry.arguments?.getString("phone") ?: ""
+
+            AddPatientScreen(
+                existingPatient = Patient(name, age, phone),
+                onSavePatient = { updatedPatient ->
+                    patientList.removeIf {
+                        it.name == name && it.phone == phone
+                    }
+                    patientList.add(updatedPatient)
+                    navController.popBackStack()
+                }
             )
         }
     }
