@@ -1,15 +1,7 @@
 package com.nitkkr.swastyacare.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,44 +13,79 @@ fun HomeScreen(
     onViewPatientsClick: () -> Unit,
     onHealthScanClick: () -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
+            .padding(20.dp),
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Text(
-            text = "SwastyaCare",
+            text = "SwastyaCare 🏥",
             style = MaterialTheme.typography.headlineLarge
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(30.dp))
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onAddPatientClick
+        Card(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Add Patient")
+            Column(modifier = Modifier.padding(20.dp)) {
+
+                Text(
+                    text = "Patient Management",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onAddPatientClick
+                ) {
+                    Text("Add Patient")
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onViewPatientsClick
+                ) {
+                    Text("View Patients")
+                }
+
+            }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onViewPatientsClick
+        Card(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("View Patients")
+
+            Column(modifier = Modifier.padding(20.dp)) {
+
+                Text(
+                    text = "AI Health Tools",
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(modifier = Modifier.height(15.dp))
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onHealthScanClick
+                ) {
+                    Text("AI Health Scan")
+                }
+
+            }
+
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onHealthScanClick
-        ) {
-            Text("Health Scan")
-        }
     }
+
 }

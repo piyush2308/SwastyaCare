@@ -1,33 +1,28 @@
 package com.nitkkr.swastyacare.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-
-data class Patient(
-    val name: String,
-    val age: String,
-    val phone: String
-)
+import com.nitkkr.swastyacare.data.AppDatabase
+import com.nitkkr.swastyacare.data.PatientEntity
+import kotlinx.coroutines.launch
 
 @Composable
-fun AddPatientScreen(
-    existingPatient: Patient? = null,
-    onSavePatient: (Patient) -> Unit
-) {
+fun AddPatientScreen() {
 
-    var name by remember { mutableStateOf(existingPatient?.name ?: "") }
-    var age by remember { mutableStateOf(existingPatient?.age ?: "") }
-    var phone by remember { mutableStateOf(existingPatient?.phone ?: "") }
+    val context = LocalContext.current
+    val db = AppDatabase.getDatabase(context)
+    val scope = rememberCoroutineScope()
 
-    var nameError by remember { mutableStateOf(false) }
-    var ageError by remember { mutableStateOf(false) }
-    var phoneError by remember { mutableStateOf(false) }
+    var name by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf("") }
+    var disease by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -37,102 +32,93 @@ fun AddPatientScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text(
-            text = if (existingPatient == null) "Add Patient" else "Edit Patient",
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        OutlinedTextField(
-            value = name,
-            onValueChange = {
-                name = it
-                nameError = false
-            },
-            label = { Text("Patient Name") },
-            isError = nameError,
+        Card(
+            shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth()
-        )
-
-        if (nameError) {
-            Text("Name cannot be empty", color = MaterialTheme.colorScheme.error)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = age,
-            onValueChange = {
-                age = it
-                ageError = false
-            },
-            label = { Text("Age") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            isError = ageError,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        if (ageError) {
-            Text("Enter valid age", color = MaterialTheme.colorScheme.error)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = phone,
-            onValueChange = {
-                phone = it
-                phoneError = false
-            },
-            label = { Text("Phone Number") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-            isError = phoneError,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        if (phoneError) {
-            Text("Enter 10 digit phone number", color = MaterialTheme.colorScheme.error)
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Button(
-                onClick = {
+            Column(
+                modifier = Modifier.padding(20.dp)
+            ) {
 
-                    nameError = name.isBlank()
-                    ageError = age.toIntOrNull() == null
-                    phoneError = phone.length != 10
+                Text(
+                    "Add Patient",
+                    style = MaterialTheme.typography.headlineSmall
+                )
 
-                    if (!nameError && !ageError && !phoneError) {
+                Spacer(modifier = Modifier.height(16.dp))
 
-                        onSavePatient(Patient(name, age, phone))
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text("Patient Name") },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-                        if (existingPatient == null) {
+                Spacer(modifier = Modifier.height(10.dp))
+
+                OutlinedTextField(
+                    value = age,
+                    onValueChange = { age = it },
+                    label = { Text("Age") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                OutlinedTextField(
+                    value = disease,
+                    onValueChange = { disease = it },
+                    label = { Text("Disease") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+
+                        val ageInt = age.toIntOrNull()
+
+                        if (name.isBlank() || ageInt == null || disease.isBlank()) {
+                            Toast.makeText(
+                                context,
+                                "Enter valid patient details",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            return@Button
+                        }
+
+                        scope.launch {
+
+                            db.patientDao().insertPatient(
+                                PatientEntity(
+                                    name = name,
+                                    age = ageInt,
+                                    disease = disease
+                                )
+                            )
+
+                            Toast.makeText(
+                                context,
+                                "Patient Saved",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
                             name = ""
                             age = ""
-                            phone = ""
+                            disease = ""
+
                         }
                     }
+                ) {
+                    Text("Save Patient")
                 }
-            ) {
-                Text(if (existingPatient == null) "Save" else "Update")
+
             }
 
-            Button(
-                onClick = {
-                    name = ""
-                    age = ""
-                    phone = ""
-                }
-            ) {
-                Text("Reset")
-            }
         }
+
     }
 }

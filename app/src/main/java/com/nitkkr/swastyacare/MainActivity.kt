@@ -5,18 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import com.nitkkr.swastyacare.data.AppDatabase
 import com.nitkkr.swastyacare.navigation.AppNavGraph
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        val db = AppDatabase.getDatabase(this)
+
         setContent {
-            MaterialTheme {
-                Surface {
-                    AppNavGraph()
-                }
-            }
+            AppNavGraph()
         }
     }
 }
