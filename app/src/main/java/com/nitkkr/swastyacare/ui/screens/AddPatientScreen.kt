@@ -14,6 +14,7 @@ import com.nitkkr.swastyacare.data.PatientEntity
 import kotlinx.coroutines.launch
 
 @Composable
+//add patient screen
 fun AddPatientScreen() {
 
     val context = LocalContext.current
