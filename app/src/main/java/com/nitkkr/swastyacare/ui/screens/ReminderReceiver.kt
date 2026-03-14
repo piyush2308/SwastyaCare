@@ -12,28 +12,27 @@ class ReminderReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        val medicine = intent.getStringExtra("medicine") ?: "Medicine"
+        val medicine = intent.getStringExtra("medicine")
 
-        val manager  = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val manager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Create channel (required API 26+)
-        val channel  = NotificationChannel(
+        val channel = NotificationChannel(
             "reminder_channel",
-            "Medicine Reminders",
+            "Medicine Reminder",
             NotificationManager.IMPORTANCE_HIGH
-        ).apply {
-            description = "Notifications for medicine reminders"
-        }
+        )
+
         manager.createNotificationChannel(channel)
 
         val notification = NotificationCompat.Builder(context, "reminder_channel")
-            .setContentTitle("💊 Medicine Reminder")
+            .setContentTitle("Medicine Reminder")
             .setContentText("Time to take $medicine")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
             .build()
 
-        manager.notify(System.currentTimeMillis().toInt(), notification)
+        manager.notify(1, notification)
+
     }
+
 }

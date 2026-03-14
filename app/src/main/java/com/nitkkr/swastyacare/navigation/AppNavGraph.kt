@@ -1,31 +1,99 @@
 package com.nitkkr.swastyacare.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import com.nitkkr.swastyacare.ui.screens.*
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.*
 
-sealed class Screen(val route: String) {
-    object Login      : Screen("login")
-    object Home       : Screen("home")
-    object Patients   : Screen("patients")
-    object AddPatient : Screen("add_patient")
-    object Reminder   : Screen("reminder")
-    object HealthScan : Screen("health_scan")
-}
+import com.nitkkr.swastyacare.ui.screens.AddPatientScreen
+import com.nitkkr.swastyacare.ui.screens.HomeScreen
+import com.nitkkr.swastyacare.ui.screens.ViewPatientsScreen
+import com.nitkkr.swastyacare.ui.screens.ReminderScreen
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Text
+import com.nitkkr.swastyacare.ui.screens.HealthScanScreen
 @Composable
-fun AppNavGraph(
-    navController: NavHostController,
-    startDestination: String = Screen.Login.route
-) {
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(Screen.Login.route)      { LoginScreen(navController) }
-        composable(Screen.Home.route)       { HomeScreen(navController) }
-        composable(Screen.Patients.route)   { PatientsScreen(navController) }
-        composable(Screen.AddPatient.route) { AddPatientScreen(navController) }
-        composable(Screen.Reminder.route)   { ReminderScreen(navController) }
-        composable(Screen.HealthScan.route) { HealthScanScreen(navController) }
+fun AppNavGraph() {
+
+    val navController = rememberNavController()
+
+    Scaffold(
+
+        bottomBar = {
+
+            NavigationBar {
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate("home") },
+                    label = { Text("Home") },
+                    icon = { Icon(Icons.Default.Home, contentDescription = null) }
+                )
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate("add") },
+                    label = { Text("Add") },
+                    icon = { Icon(Icons.Default.Add, contentDescription = null) }
+                )
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate("view") },
+                    label = { Text("Patients") },
+                    icon = { Icon(Icons.Default.List, contentDescription = null) }
+                )
+
+                NavigationBarItem(
+                    selected = false,
+                    onClick = { navController.navigate("reminder") },
+                    label = { Text("Reminder") },
+                    icon = { Icon(Icons.Default.Notifications, contentDescription = null) }
+                )
+
+            }
+
+        }
+
+    ) { padding ->
+
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+            modifier = Modifier.padding(padding)
+        ) {
+
+            composable(route = "home") {
+                HomeScreen(
+                    onAddPatientClick = { navController.navigate("add") },
+                    onViewPatientsClick = { navController.navigate("view") },
+                    onHealthScanClick = { navController.navigate("scan") }
+                )
+            }
+
+            composable("add") {
+                AddPatientScreen()
+            }
+
+            composable("view") {
+                ViewPatientsScreen()
+            }
+
+            composable("reminder") {
+                ReminderScreen()
+            }
+
+            composable("scan") {
+                HealthScanScreen()
+            }
+        }
+
     }
+
 }
