@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1043703246657",
+    "project_id": "swastyacare",
+    "storage_bucket": "swastyacare.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043703246657:android:32ef26b45339a594fa3bc0",
+        "android_client_info": {
+          "package_name": "com.nitkkr.swastyacare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2WfcgRuheA2wKhzybxdNVTTm9T-hmAHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
